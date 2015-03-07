@@ -10,7 +10,7 @@ function start( response ) {
     function (error, stdout, stderr) {
     // content = stdout; #no need anymore
     console.log('exec result:');
-    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.writeHead(200, {"Content-Type": "text/plain; charset=utf-8"});
     response.write(stdout + stderr);
     response.end();
   });

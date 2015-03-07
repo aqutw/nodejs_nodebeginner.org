@@ -10,17 +10,13 @@ function start( route, handle ) { //<--ready route HERE ...
                       ? qs.parse( request.url.split('?')[1] ) /* MUST split for qs */ 
                       : {}; 
     
-    console.log(o);
-    console.log(o.query);//run me at http://127.0.0.1:8888/sadlkfa?a=1&b=bbb&c=cc
-    console.log( querystring );
+    // console.log(o);
+    // console.log(o.query);//run me at http://127.0.0.1:8888/sadlkfa?a=1&b=bbb&c=cc
+    // console.log( querystring );
     
     console.log("Request for " + pathname + " received.");
 
-    route(handle, pathname); // ... so that we can call it
-
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write("Hello World");
-    response.end();
+    route(handle, pathname, response);
   }
 
   http.createServer(onRequest).listen(8888);

@@ -2,7 +2,7 @@ var http = require("http");
 var url = require("url");
 var qs = require("querystring");
 
-function start() {
+function start( route ) { //<--ready route HERE ...
   function onRequest(request, response) {
     var pathname = url.parse(request.url).pathname
       , o = url.parse(request.url)
@@ -15,6 +15,9 @@ function start() {
     console.log( querystring );
     
     console.log("Request for " + pathname + " received.");
+
+    route(pathname); // ... so that we can call it
+
     response.writeHead(200, {"Content-Type": "text/plain"});
     response.write("Hello World");
     response.end();

@@ -1,4 +1,5 @@
 var exec = require("child_process").exec;
+var querystring = require("querystring");
 
 function start( response ) {
   console.log("Request handler 'start' was called.");
@@ -22,11 +23,12 @@ function start( response ) {
 
 }
 
-function upload( response ) {
+function upload( response, postData ) {
   console.log("Request handler 'upload' was called.");
+  var $_POST = querystring.parse(postData); // no mind, just miss PHP for a while
   // return "Hello Upload"; #incorrect way
   response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write("Hello Upload bbbbb");
+  response.write("Hello Upload bbbbb" + $_POST.text );
   response.end();
 }
 

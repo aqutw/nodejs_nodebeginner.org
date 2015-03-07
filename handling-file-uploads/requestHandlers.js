@@ -1,6 +1,7 @@
 var exec = require("child_process").exec;
 var querystring = require("querystring");
 var fs = require("fs");
+var formidable = require("formidable");
 
 function start( response ) {
   console.log("Request handler 'start' was called.");
@@ -11,9 +12,9 @@ function start( response ) {
     'content="text/html; charset=UTF-8" />'+
     '</head>'+
     '<body>'+
-    '<form action="/upload" method="post">'+
-    '<textarea name="text" rows="20" cols="60"></textarea>'+
-    '<input type="submit" value="Submit text" />'+
+    '<form action="/upload" method="post" enctype="multipart/form-data">'+
+    '<input type="file" name="upload">'+
+    '<input type="submit" value="Upload file" />'+
     '</form>'+
     '</body>'+
     '</html>';
@@ -24,18 +25,25 @@ function start( response ) {
 
 }
 
-function upload( response, postData ) {
+function upload( response, request ) {
   console.log("Request handler 'upload' was called.");
-  var $_POST = querystring.parse(postData); // no mind, just miss PHP for a while
-  // return "Hello Upload"; #incorrect way
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write("Hello Upload bbbbb" + $_POST.text );
-  response.end();
+  
+  var form = new formidable.IncomingForm();
+  form.uploadDir = "./tmp"; // solve "cross-device link not permitted", see http://cssor.com/nodejs-fs-renamesync-error-exdev-cross-device-link-not-permitted.html
+  form.parse(request, function(error, fields, files) {
+    console.log("parsing done");
+    fs.renameSync(files.upload.path, "../../../20150307test_nodejs.jpg");
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write("received image:<br/>");
+    response.write("<img src='/show' />");
+    response.end();
+  });
+
 }
 
-function show(response, postData) {
+function show(response) {
   console.log("Request handler 'show' was called.");
-  fs.readFile("../../../1535680_694350110587235_281093121_n.jpg", "binary", function(error, file) {
+  fs.readFile("../../../20150307test_nodejs.jpg", "binary", function(error, file) {
     if(error) {
       console.log('ERRRRRRRRROR');
       console.log(error);

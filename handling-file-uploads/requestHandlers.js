@@ -2,6 +2,7 @@ var exec = require("child_process").exec;
 var querystring = require("querystring");
 var fs = require("fs");
 var formidable = require("formidable");
+var FINAL_IMG_PATH = "../../../20150307test_nodejs.jpg";
 
 function start( response ) {
   console.log("Request handler 'start' was called.");
@@ -32,7 +33,7 @@ function upload( response, request ) {
   form.uploadDir = "./tmp"; // solve "cross-device link not permitted", see http://cssor.com/nodejs-fs-renamesync-error-exdev-cross-device-link-not-permitted.html
   form.parse(request, function(error, fields, files) {
     console.log("parsing done");
-    fs.renameSync(files.upload.path, "../../../20150307test_nodejs.jpg");
+    fs.renameSync(files.upload.path, FINAL_IMG_PATH);
     response.writeHead(200, {"Content-Type": "text/html"});
     response.write("received image:<br/>");
     response.write("<img src='/show' />");
@@ -43,7 +44,7 @@ function upload( response, request ) {
 
 function show(response) {
   console.log("Request handler 'show' was called.");
-  fs.readFile("../../../20150307test_nodejs.jpg", "binary", function(error, file) {
+  fs.readFile(FINAL_IMG_PATH, "binary", function(error, file) {
     if(error) {
       console.log('ERRRRRRRRROR');
       console.log(error);
